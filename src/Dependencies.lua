@@ -8,7 +8,7 @@ require 'src/Board'
 require 'src/Tile'
 
 require 'src/states/BaseState'
-
+require 'src/states/StartState'
 
 gSounds = {
     ['music'] = love.audio.newSource('sounds/music3.mp3', 'static'),

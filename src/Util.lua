@@ -60,11 +60,3 @@ function resetColor()
     love.graphics.setColor(255, 255, 255, 255)
 end
 
-
-function pressedEscape()
-    return love.keyboard.wasPressed('escape')
-end
-
-function pressedEnter()
-    return love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return')
-end
