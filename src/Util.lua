@@ -55,3 +55,7 @@ function print_r(t)
     end
     print()
 end
+
+function resetColor()
+    love.graphics.setColor(255, 255, 255, 255)
+end
