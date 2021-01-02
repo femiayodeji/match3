@@ -10,6 +10,7 @@ require 'src/Tile'
 require 'src/states/BaseState'
 require 'src/states/StartState'
 require 'src/states/BeginGameState'
+require 'src/states/PlayState'
 
 gSounds = {
     ['music'] = love.audio.newSource('sounds/music3.mp3', 'static'),

@@ -22,4 +22,55 @@ function PlayState:init()
     end)
 end
 
+function PlayState:enter(params)
+    self.level = params.level
+    self.board = params.board or Board(VIRTUAL_WIDTH - 272, 16)
+    self.score = params.score or 0
+    self.scoreGoal = self.level * 1.25 * 1000
+end
 
+function PlayState:update(dt)
+    if love.keyboard.wasPressed('escape') then 
+        love.event.quit()
+    end
+end
+
+function PlayState:render()
+    self.board:render()
+
+    if self.highlightedTile then 
+        love.graphics.setBlendMode('add')
+        love.graphics.setColor(1, 1, 1, 96/255)
+        love.graphics.rectangle(
+            'fill', 
+            (self.highlightedTile.gridX - 1) * 32 + (VIRTUAL_WIDTH - 272), 
+            (self.highlightedTile.gridY - 1) * 32 + 16, 
+            32, 32, 4
+        )
+        love.graphics.setBlendMode('alpha')
+    end
+
+    if self.rectHighlighted then 
+        love.graphics.setColor(217/255, 87/255, 99/255, 1)
+    else
+        love.graphics.setColor(172/255, 50/255, 50/255, 1)
+    end
+
+    love.graphics.setLineWidth(4)
+    love.graphics.rectangle(
+        'line', 
+        self.boardHighlightX * 32 + (VIRTUAL_WIDTH - 272), 
+        self.boardHighlightY * 32 + 16, 
+        32, 32, 4
+    )
+
+    love.graphics.setColor(56/255, 56/255, 56/255, 234/255)
+    love.graphics.rectangle('fill', 16, 16, 186, 116, 4)
+
+    love.graphics.setColor(99/255, 155/255, 1, 1)
+    love.graphics.setFont(gFonts['medium'])
+    love.graphics.printf('Level: ' .. tostring(self.level), 20, 24, 182, 'center')
+    love.graphics.printf('Score: ' .. tostring(self.score), 20, 52, 182, 'center')
+    love.graphics.printf('Goal: ' .. tostring(self.scoreGoal), 20, 80, 182, 'center')
+    love.graphics.printf('Timer: ' .. tostring(self.timer), 20, 108, 182, 'center')
+end
