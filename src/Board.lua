@@ -5,14 +5,14 @@ function Board:init(x, y)
     self.y = y 
     self.matches = {}
 
-    self.initializeTiles()
+    self:initializeTiles()
 end
 
 function Board:initializeTiles()
     self.tiles = {}
 
     for tileY = 1, 8 do 
-        table.insert(tiles, {})
+        table.insert(self.tiles, {})
         for tileX = 1, 8 do 
             table.insert(
                 self.tiles[tileY], 
