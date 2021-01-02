@@ -1,4 +1,4 @@
-GameOverState = class{__includes = BaseState}
+GameOverState = Class{__includes = BaseState}
 
 function GameOverState:init()
 end

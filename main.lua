@@ -27,6 +27,7 @@ function love.load()
         ['start'] = function() return StartState() end,
         ['begin-game'] = function() return BeginGameState() end,
         ['play'] = function() return PlayState() end,
+        ['game-over'] = function() return GameOverState() end,
     }
 
     gStateMachine:change('start')
@@ -53,6 +54,9 @@ function love.keyboard.wasPressed(key)
 end
 
 function love.update(dt)
+    if love.keyboard.wasPressed('escape') then 
+        love.event.quit()
+    end
     backgroundX = backgroundX - BACKGROUND_SCROLL_SPEED * dt
     if backgroundX <= -1024 + VIRTUAL_WIDTH - 4 + 51 then 
         backgroundX = 0

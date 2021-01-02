@@ -42,10 +42,6 @@ function StartState: init()
 end
 
 function StartState:update(dt)
-    if love.keyboard.wasPressed('escape') then 
-        love.event.quit()
-    end
-
     if not self.pauseInput then 
         if love.keyboard.wasPressed('up') or love.keyboard.wasPressed('down') then 
             self.currentMenuItem = self.currentMenuItem == 1 and 2 or 1

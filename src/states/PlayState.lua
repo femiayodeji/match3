@@ -30,10 +30,6 @@ function PlayState:enter(params)
 end
 
 function PlayState:update(dt)
-    if love.keyboard.wasPressed('escape') then 
-        love.event.quit()
-    end
-
     if self.timer <= 0 then 
         Timer.clear()
         gSounds['game-over']:play()
