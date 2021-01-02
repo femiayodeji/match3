@@ -33,6 +33,100 @@ function PlayState:update(dt)
     if love.keyboard.wasPressed('escape') then 
         love.event.quit()
     end
+
+    if self.timer <= 0 then 
+        Timer.clear()
+        gSounds['game-over']:play()
+        gStateMachine:change('game-over', {
+            score = self.score
+        })
+    end
+
+    if self.score >= self.scoreGoal then 
+        Timer.clear()
+        gSounds['next-level']:play()
+        gStateMachine:change('begin-game', {
+            level = self.level + 1, 
+            score = self.score
+        })
+    end
+
+    if self.canInput then 
+        if love.keyboard.wasPressed('up') then 
+            self.boardHighlightY = math.max(0, self.boardHighlightY - 1)
+            gSounds['select']:play()
+        elseif love.keyboard.wasPressed('down') then 
+            self.boardHighlightY = math.min(7, self.boardHighlightY + 1)
+            gSounds['select']:play()
+        elseif love.keyboard.wasPressed('left') then 
+            self.boardHighlightX = math.max(0, self.boardHighlightX - 1)
+            gSounds['select']:play()
+        elseif love.keyboard.wasPressed('right') then 
+            self.boardHighlightX = math.min(7, self.boardHighlightX + 1)
+            gSounds['select']:play()
+        end
+
+        if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then 
+            local x = self.boardHighlightX + 1
+            local y = self.boardHighlightY + 1
+            local currentTile = self.board.tiles[y][x]
+
+            if not self.highlightedTile then 
+                self.highlightedTile = currentTile
+            elseif self.highlightedTile == currentTile then 
+                self.highlightedTile = nil
+            elseif math.abs(self.highlightedTile.gridX - x) + math.abs(self.highlightedTile.gridY - y) > 1 then 
+                gSounds['error']:play()
+                self.highlightedTile = nil
+            else 
+                local tempX = self.highlightedTile.gridX
+                local tempY = self.highlightedTile.gridY
+
+                local newTile = self.board.tiles[y][x]
+
+                self.highlightedTile.gridX = newTile.gridX
+                self.highlightedTile.gridY = newTile.gridY
+                newTile.gridX = tempX
+                newTile.gridY = tempY
+
+                self.board.tiles[self.highlightedTile.gridY][self.highlightedTile.gridX] = self.highlightedTile
+                self.board.tiles[newTile.gridY][newTile.gridX] = newTile
+                
+                Timer.tween(0.1, {
+                    [self.highlightedTile] = {x = newTile.x, y = newTile.y},
+                    [newTile] = {x = self.highlightedTile.x, y = self.highlightedTile.y}
+                })
+                :finish(function() 
+                    self:calculateMatches()
+                end)
+            end
+        end
+    end
+    Timer.update(dt)
+end
+
+function PlayState:calculateMatches()
+    self.highlightedTile = nil 
+    local matches = self.board:calculateMatches()
+
+    if matches then 
+        gSounds['match']:stop()
+        gSounds['match']:play()
+        
+        for k, match in pairs(matches) do 
+            self.score = self.score + #match * 50
+        end
+
+        self.board:removeMatches()
+
+        local tilesToFall = self.board:getFallingTiles()
+
+        Timer.tween(0.25, tilesToFall):finish(function() 
+            self:calculateMatches()
+        end)
+    else
+        self.canInput = true
+    end
 end
 
 function PlayState:render()

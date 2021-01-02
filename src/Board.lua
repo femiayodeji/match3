@@ -140,7 +140,7 @@ function Board:getFallingTiles()
             elseif tile == nil then 
                 space = true
                 if spaceY == 0 then 
-                    spacey = y 
+                    spaceY = y 
                 end
             end
 
