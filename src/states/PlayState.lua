@@ -8,7 +8,6 @@ function PlayState:init()
     self.canInput = true
     self.highlightedTile = nil
     self.score = 0
-    self.timer = 60
 
     Timer.every(0.5, function() 
         self.rectHighlighted = not self.rectHighlighted
@@ -26,7 +25,8 @@ function PlayState:enter(params)
     self.level = params.level
     self.board = params.board or Board(VIRTUAL_WIDTH - 272, 16)
     self.score = params.score or 0
-    self.scoreGoal = self.level * 1.25 * 1000
+    self.scoreGoal = self.level * 1.2 * 1000
+    self.timer = self.level / 2 * 1.5 * 60
 end
 
 function PlayState:update(dt)
@@ -62,7 +62,10 @@ function PlayState:update(dt)
             gSounds['select']:play()
         end
 
-        if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then 
+        if (
+            love.keyboard.wasPressed('enter') or 
+            love.keyboard.wasPressed('return')
+        ) then 
             local x = self.boardHighlightX + 1
             local y = self.boardHighlightY + 1
             local currentTile = self.board.tiles[y][x]
